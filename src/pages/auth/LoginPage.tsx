@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../auth/useAuth';
-import { ApiError } from '../../api/client';
+import { useAuth } from '@/auth/useAuth';
+import { ApiError } from '@/api/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -30,38 +34,56 @@ export default function LoginPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Log in</h1>
+    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="font-heading text-2xl">Log in</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {error && (
+              <p role="alert" className="text-sm text-destructive">
+                {error}
+              </p>
+            )}
 
-      {error && <p role="alert">{error}</p>}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+              />
+            </div>
 
-      <label htmlFor="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        autoComplete="email"
-      />
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
+            </div>
 
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        autoComplete="current-password"
-      />
+            <Button type="submit" disabled={isSubmitting} className="mt-2">
+              {isSubmitting ? 'Logging in…' : 'Log in'}
+            </Button>
 
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Logging in…' : 'Log in'}
-      </button>
-
-      <p>
-        Don't have an account? <Link to="/register">Register</Link>
-      </p>
-    </form>
+            <p className="text-center text-sm text-muted-foreground">
+              Don't have an account?{' '}
+              <Link to="/register" className="font-medium text-primary hover:underline">
+                Register
+              </Link>
+            </p>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
