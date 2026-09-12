@@ -7,11 +7,15 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api:spec": "curl -s http://localhost:8080/v3/api-docs | python3 -m json.tool > openapi.json",
+    "api:types": "npx -y openapi-typescript@7 openapi.json -o src/types/api.d.ts",
+    "api:sync": "npm run api:spec && npm run api:types"
   },
   "dependencies": {
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
