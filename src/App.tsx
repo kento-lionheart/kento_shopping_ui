@@ -4,6 +4,7 @@ import { ProtectedRoute } from './auth/ProtectedRoute';
 import { AdminLayout } from './layouts/AdminLayout';
 import { StorefrontLayout } from './layouts/StorefrontLayout';
 import AdminHomePage from './pages/admin/AdminHomePage';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import AdminRolesPage from './pages/admin/AdminRolesPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminHomePage />} />
           <Route path="products" element={<AdminProductsPage />} />
+          <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="users" element={<AdminUsersPage />} />
           <Route path="roles" element={<AdminRolesPage />} />
         </Route>
