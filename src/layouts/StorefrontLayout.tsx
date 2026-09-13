@@ -1,4 +1,4 @@
-import { LogOut, MapPin, ShoppingCart, User } from 'lucide-react';
+import { LogOut, MapPin, ShoppingCart, User, Wallet } from 'lucide-react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/useAuth';
 import { Button } from '@/components/ui/button';
@@ -39,6 +39,12 @@ function AccountMenu() {
           <Link to="/account/address">
             <MapPin />
             My Address
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/wallet">
+            <Wallet />
+            Wallet
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogout}>

@@ -10,6 +10,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import AddressPage from './pages/AddressPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductListPage from './pages/ProductListPage';
+import WalletPage from './pages/WalletPage';
 
 function AppRoutes() {
   return (
@@ -23,6 +24,7 @@ function AppRoutes() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/account/address" element={<AddressPage />} />
+          <Route path="/wallet" element={<WalletPage />} />
         </Route>
       </Route>
 
