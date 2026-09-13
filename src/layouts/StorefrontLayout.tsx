@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LogOut, MapPin, Receipt, ShoppingCart, User, Wallet } from 'lucide-react';
+import { LayoutDashboard, LogOut, MapPin, Receipt, ShoppingCart, User, Wallet } from 'lucide-react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import * as cartApi from '@/api/cart';
 import { useAuth } from '@/auth/useAuth';
@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 function AccountMenu() {
-  const { user, logout } = useAuth();
+  const { user, roles, permissions, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -28,6 +28,11 @@ function AccountMenu() {
     );
   }
 
+  const isCustomer = roles.includes('CUSTOMER');
+  // Customers hold zero permissions (see CLAUDE.md) — any permission at all
+  // means this account has admin/staff access worth surfacing a way back to.
+  const hasAdminAccess = permissions.length > 0;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,24 +42,36 @@ function AccountMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild>
-          <Link to="/account/address">
-            <MapPin />
-            My Address
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/wallet">
-            <Wallet />
-            Wallet
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/orders">
-            <Receipt />
-            My Orders
-          </Link>
-        </DropdownMenuItem>
+        {isCustomer && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link to="/account/address">
+                <MapPin />
+                My Address
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/wallet">
+                <Wallet />
+                Wallet
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/orders">
+                <Receipt />
+                My Orders
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
+        {hasAdminAccess && (
+          <DropdownMenuItem asChild>
+            <Link to="/admin">
+              <LayoutDashboard />
+              Admin Dashboard
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut />
           Log out
