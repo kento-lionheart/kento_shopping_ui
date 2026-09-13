@@ -14,6 +14,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import AddressPage from './pages/AddressPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductListPage from './pages/ProductListPage';
 import WalletPage from './pages/WalletPage';
@@ -33,6 +34,7 @@ function AppRoutes() {
           <Route path="/wallet" element={<WalletPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrderHistoryPage />} />
         </Route>
       </Route>
 
