@@ -11,6 +11,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import AddressPage from './pages/AddressPage';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductListPage from './pages/ProductListPage';
 import WalletPage from './pages/WalletPage';
@@ -29,6 +30,7 @@ function AppRoutes() {
           <Route path="/account/address" element={<AddressPage />} />
           <Route path="/wallet" element={<WalletPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
         </Route>
       </Route>
 
