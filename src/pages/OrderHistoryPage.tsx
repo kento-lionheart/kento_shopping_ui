@@ -8,6 +8,17 @@ import { formatCoins } from '@/lib/money';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 type FetchResult =
   | { key: number; orders: OrderSummaryResponse[]; error?: undefined }
@@ -43,20 +54,26 @@ function formatDate(value: string | undefined): string {
 
 /**
  * One order's row in the history list. Kept as its own component with a
- * dedicated actions slot so the upcoming "Cancel order" feature (UC-12) can
- * add a button here — next to "Pay now" — without restructuring this page.
+ * dedicated actions slot so the "Cancel order" feature (UC-12) can add a
+ * button here — next to "Pay now" — without restructuring this page.
  */
 function OrderRow({
   order,
   onPaid,
+  onCancelled,
 }: {
   order: OrderSummaryResponse;
   onPaid: (orderId: number, next: ordersApi.OrderResponse) => void;
+  onCancelled: (orderId: number, next: ordersApi.OrderResponse) => void;
 }) {
   const [isPaying, setIsPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
   const [insufficientBalance, setInsufficientBalance] = useState(false);
   const [justPaid, setJustPaid] = useState(false);
+
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
+  const [justCancelled, setJustCancelled] = useState(false);
 
   const isPending = order.status === 'PENDING';
 
@@ -78,6 +95,25 @@ function OrderRow({
       }
     } finally {
       setIsPaying(false);
+    }
+  }
+
+  async function handleCancel() {
+    if (order.orderId === undefined) return;
+    setCancelError(null);
+    setIsCancelling(true);
+    try {
+      const cancelled = await ordersApi.cancelOrder(order.orderId);
+      setJustCancelled(true);
+      onCancelled(order.orderId, cancelled);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setCancelError(err.message);
+      } else {
+        setCancelError('Something went wrong while cancelling your order. Please try again.');
+      }
+    } finally {
+      setIsCancelling(false);
     }
   }
 
@@ -119,6 +155,13 @@ function OrderRow({
         </div>
       )}
 
+      {justCancelled && (
+        <div className="flex items-center gap-2 text-sm text-primary">
+          <CheckCircle2 className="size-4" aria-hidden="true" />
+          Order cancelled.
+        </div>
+      )}
+
       {payError && (
         <div className="flex flex-col gap-2 rounded-sm border border-destructive/30 bg-destructive/10 p-3">
           <p role="alert" className="text-sm text-destructive">
@@ -132,9 +175,17 @@ function OrderRow({
         </div>
       )}
 
-      {isPending && !justPaid && (
-        // Actions slot: room for an additional "Cancel order" button next to
-        // "Pay now" for UC-12 — do not restructure this row for it.
+      {cancelError && (
+        <div className="flex flex-col gap-2 rounded-sm border border-destructive/30 bg-destructive/10 p-3">
+          <p role="alert" className="text-sm text-destructive">
+            {cancelError}
+          </p>
+        </div>
+      )}
+
+      {isPending && !justPaid && !justCancelled && (
+        // Actions slot: "Cancel order" sits next to "Pay now" for UC-12 —
+        // both are valid next steps for a pending order.
         <div className="flex items-center gap-2">
           <Button
             type="button"
@@ -146,6 +197,28 @@ function OrderRow({
             {isPaying ? <Loader2 className="animate-spin" /> : null}
             {isPaying ? 'Processing…' : 'Pay now'}
           </Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button type="button" size="sm" variant="outline" disabled={isCancelling}>
+                {isCancelling ? <Loader2 className="animate-spin" /> : null}
+                {isCancelling ? 'Cancelling…' : 'Cancel order'}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Cancel this order?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to cancel this order? The items will be restocked and this
+                  action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Keep order</AlertDialogCancel>
+                <AlertDialogAction onClick={handleCancel}>Yes, cancel order</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )}
     </div>
@@ -187,6 +260,24 @@ export default function OrderHistoryPage() {
   const isLoading = result?.key !== requestKey;
 
   function handlePaid(orderId: number, updated: ordersApi.OrderResponse) {
+    setResult((prev) => {
+      if (!prev || prev.orders === undefined) return prev;
+      return {
+        key: prev.key,
+        orders: prev.orders.map((order) =>
+          order.orderId === orderId
+            ? {
+                ...order,
+                status: updated.orderStatus ?? order.status,
+                paymentStatus: updated.paymentStatus ?? order.paymentStatus,
+              }
+            : order,
+        ),
+      };
+    });
+  }
+
+  function handleCancelled(orderId: number, updated: ordersApi.OrderResponse) {
     setResult((prev) => {
       if (!prev || prev.orders === undefined) return prev;
       return {
@@ -256,7 +347,7 @@ export default function OrderHistoryPage() {
 
       <div className="flex flex-col rounded-sm border border-border bg-card px-5">
         {orders.map((order) => (
-          <OrderRow key={order.orderId} order={order} onPaid={handlePaid} />
+          <OrderRow key={order.orderId} order={order} onPaid={handlePaid} onCancelled={handleCancelled} />
         ))}
       </div>
     </div>
