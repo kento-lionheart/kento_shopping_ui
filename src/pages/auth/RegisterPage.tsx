@@ -91,8 +91,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-[#1C1917] to-[#3a2f1f] px-4 py-8">
-      <Card className="w-full max-w-sm border-white/10 bg-[rgba(28,25,23,0.6)] shadow-2xl backdrop-blur-2xl backdrop-saturate-150">
+    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-[#2A0F0A] to-[#4a1c10] px-4 py-8">
+      <Card className="w-full max-w-sm border-white/10 bg-[rgba(42,15,10,0.6)] shadow-2xl backdrop-blur-2xl backdrop-saturate-150">
         <CardHeader>
           <p className="text-xs font-medium tracking-[0.3em] text-cta uppercase">Kento</p>
           <CardTitle className="font-heading text-3xl font-medium text-white">Register</CardTitle>

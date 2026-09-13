@@ -7,9 +7,9 @@
 ---
 
 **Project:** Kento Shopping
-**Generated:** 2026-09-12 16:51:49
-**Category:** E-commerce Luxury
-**Design Dials:** Variance 7/10 (Balanced / Modern)
+**Generated:** 2026-09-13 (warm-luxury revision)
+**Category:** E-commerce Luxury (warm)
+**Design Dials:** Variance 5/10 (Balanced / Modern)
 
 ---
 
@@ -19,35 +19,36 @@
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
-| Primary | `#1C1917` | `--color-primary` |
+| Primary | `#7C2D12` | `--color-primary` |
 | On Primary | `#FFFFFF` | `--color-on-primary` |
-| Secondary | `#44403C` | `--color-secondary` |
+| Secondary | `#B91C1C` | `--color-secondary` |
 | On Secondary | `#FFFFFF` | `--color-on-secondary` |
 | Accent/CTA | `#A16207` | `--color-accent` |
 | On Accent/CTA | `#FFFFFF` | `--color-on-accent` |
-| Background | `#FAFAF9` | `--color-background` |
-| Foreground | `#0C0A09` | `--color-foreground` |
+| Background | `#FEF2F2` | `--color-background` |
+| Foreground | `#450A0A` | `--color-foreground` |
 | Card | `#FFFFFF` | `--color-card` |
-| Card Foreground | `#0C0A09` | `--color-card-foreground` |
-| Muted | `#E8ECF0` | `--color-muted` |
-| Muted Foreground | `#475569` | `--color-muted-foreground` |
-| Border | `#D6D3D1` | `--color-border` |
+| Card Foreground | `#450A0A` | `--color-card-foreground` |
+| Muted | `#F8EDEA` | `--color-muted` |
+| Muted Foreground | `#6E6560` | `--color-muted-foreground` |
+| Border | `#FECACA` | `--color-border` |
 | Destructive | `#DC2626` | `--color-destructive` |
 | On Destructive | `#FFFFFF` | `--color-on-destructive` |
-| Ring | `#1C1917` | `--color-ring` |
+| Ring | `#7C2D12` | `--color-ring` |
 
-**Color Notes:** Premium dark + gold accent [Accent adjusted from #CA8A04]
+**Color Notes:** Deep burgundy + craft gold — wine/leather warmth, gold accent kept
+from the prior palette for continuity. All text pairs verified ≥4.5:1 contrast.
 
 ### Typography
 
-- **Heading Font:** Cormorant
-- **Body Font:** Montserrat
-- **Mood:** luxury, high-end, fashion, elegant, refined, premium
-- **Google Fonts:** [Cormorant + Montserrat](https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap)
+- **Heading Font:** Playfair Display
+- **Body Font:** Inter
+- **Mood:** luxury, high-end, fashion, elegant, editorial, premium
+- **Google Fonts:** [Playfair Display + Inter](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap)
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 ```
 
 ### Spacing Variables
@@ -97,8 +98,8 @@
 /* Secondary Button */
 .btn-secondary {
   background: transparent;
-  color: #1C1917;
-  border: 2px solid #1C1917;
+  color: #7C2D12;
+  border: 2px solid #7C2D12;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -111,7 +112,7 @@
 
 ```css
 .card {
-  background: #FAFAF9;
+  background: #FEF2F2;
   border-radius: 12px;
   padding: 24px;
   box-shadow: var(--shadow-md);
@@ -137,9 +138,9 @@
 }
 
 .input:focus {
-  border-color: #1C1917;
+  border-color: #7C2D12;
   outline: none;
-  box-shadow: 0 0 0 3px #1C191720;
+  box-shadow: 0 0 0 3px #7C2D1220;
 }
 ```
 
