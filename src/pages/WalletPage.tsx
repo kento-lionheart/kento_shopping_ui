@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Coins, ServerCrash, X } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Coins, ServerCrash, Wallet, X } from 'lucide-react';
 import { ApiError } from '@/api/client';
 import * as walletApi from '@/api/wallet';
-import type { TopUpRequestResponse } from '@/api/wallet';
+import type { CoinTransactionResponse, TopUpRequestResponse, WalletResponse } from '@/api/wallet';
 import { formatCoins } from '@/lib/money';
 import {
   AlertDialog,
@@ -44,6 +44,230 @@ function statusBadgeVariant(status: TopUpRequestResponse['status']) {
 function formatDate(value: string | undefined): string {
   if (!value) return '';
   return new Date(value).toLocaleString();
+}
+
+const TX_TYPE_LABELS: Record<string, string> = {
+  TOP_UP: 'Top-up',
+  PURCHASE: 'Purchase',
+  REFUND: 'Refund',
+  ADJUSTMENT: 'Adjustment',
+};
+
+function txTypeLabel(type: CoinTransactionResponse['type']): string {
+  if (!type) return 'Transaction';
+  return TX_TYPE_LABELS[type] ?? type;
+}
+
+/** Reference type/id link each row to the event that caused it (an order or a top-up
+ * request) so the row is self-explanatory, even without a detail page to link to. */
+function referenceLabel(transaction: CoinTransactionResponse): string | null {
+  const { referenceType, referenceId } = transaction;
+  if (!referenceType || referenceId === undefined) return null;
+  switch (referenceType) {
+    case 'ORDER':
+      return `Order #${referenceId}`;
+    case 'TOP_UP_REQUEST':
+      return `Top-up #${referenceId}`;
+    default:
+      return `${referenceType} #${referenceId}`;
+  }
+}
+
+function formatSignedCoins(amount: number): string {
+  return `${amount > 0 ? '+' : ''}${formatCoins(amount)}`;
+}
+
+function TransactionRow({ transaction }: { transaction: CoinTransactionResponse }) {
+  const amount = transaction.amount ?? 0;
+  const isCredit = amount >= 0;
+  const reference = referenceLabel(transaction);
+
+  return (
+    <div className="flex items-center justify-between gap-4 border-b border-border py-3 last:border-b-0">
+      <div className="flex items-center gap-3">
+        <div
+          className={`flex size-9 shrink-0 items-center justify-center rounded-full ${
+            isCredit ? 'bg-accent text-foreground' : 'bg-muted text-muted-foreground'
+          }`}
+          aria-hidden="true"
+        >
+          {isCredit ? <ArrowUpRight className="size-4" /> : <ArrowDownLeft className="size-4" />}
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <span className="text-sm font-medium text-foreground">{txTypeLabel(transaction.type)}</span>
+          <span className="text-xs text-muted-foreground">
+            {[reference, formatDate(transaction.createdAt)].filter(Boolean).join(' · ')}
+          </span>
+          {transaction.note && (
+            <span className="text-xs text-muted-foreground">Note: {transaction.note}</span>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-col items-end gap-0.5">
+        <span
+          className={`text-sm font-semibold ${isCredit ? 'text-foreground' : 'text-muted-foreground'}`}
+        >
+          {formatSignedCoins(amount)}
+        </span>
+        {transaction.balanceAfter !== undefined && (
+          <span className="text-xs text-muted-foreground">
+            Balance {formatCoins(transaction.balanceAfter)}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function BalanceCard({
+  wallet,
+  isLoading,
+  error,
+  onRetry,
+}: {
+  wallet: WalletResponse | null;
+  isLoading: boolean;
+  error: string | null;
+  onRetry: () => void;
+}) {
+  return (
+    <Card>
+      <CardContent className="flex flex-col items-start gap-2">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Wallet className="size-4" />
+          Current balance
+        </div>
+
+        {isLoading && <Skeleton className="h-10 w-48" />}
+
+        {!isLoading && error && (
+          <div className="flex flex-col gap-2">
+            <p className="text-sm text-muted-foreground">{error}</p>
+            <Button variant="outline" size="sm" onClick={onRetry}>
+              Retry
+            </Button>
+          </div>
+        )}
+
+        {!isLoading && !error && (
+          <>
+            <span className="font-heading text-4xl font-semibold text-foreground">
+              {formatCoins(wallet?.balance ?? 0)}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              As of now — balance only changes once a top-up is approved or an order completes.
+            </span>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+const TRANSACTIONS_PAGE_SIZE = 20;
+
+function TransactionLedger() {
+  const [page, setPage] = useState(0);
+  const [result, setResult] = useState<
+    | { key: number; data: walletApi.PageCoinTransactionResponse; error?: undefined }
+    | { key: number; data?: undefined; error: string }
+    | null
+  >(null);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const requestKey = page * 1000 + retryCount;
+  const isLoading = result?.key !== requestKey;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    walletApi.getTransactions({ page, size: TRANSACTIONS_PAGE_SIZE }).then(
+      (data) => {
+        if (!cancelled) setResult({ key: requestKey, data });
+      },
+      (err) => {
+        if (cancelled) return;
+        const message = err instanceof ApiError ? err.message : 'Failed to load transactions.';
+        setResult({ key: requestKey, error: message });
+      },
+    );
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestKey]);
+
+  const error = isLoading ? null : (result?.error ?? null);
+  const data = isLoading ? null : (result?.data ?? null);
+  const transactions = data?.content ?? [];
+  const totalPages = data?.totalPages ?? 0;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <h2 className="font-heading text-lg font-medium text-foreground">Recent activity</h2>
+
+      <Card>
+        <CardContent>
+          {isLoading && (
+            <div className="flex flex-col gap-3">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          )}
+
+          {!isLoading && error && (
+            <div className="flex flex-col items-center gap-3 py-8 text-center">
+              <ServerCrash className="size-10 text-muted-foreground" aria-hidden="true" />
+              <p className="text-sm text-muted-foreground">{error}</p>
+              <Button variant="outline" onClick={() => setRetryCount((c) => c + 1)}>
+                Retry
+              </Button>
+            </div>
+          )}
+
+          {!isLoading && !error && transactions.length === 0 && (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No transactions yet.
+            </p>
+          )}
+
+          {!isLoading && !error && transactions.length > 0 && (
+            <div className="flex flex-col">
+              {transactions.map((transaction) => (
+                <TransactionRow key={transaction.id} transaction={transaction} />
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {!isLoading && !error && totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page <= 0}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            Previous
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            Page {page + 1} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page + 1 >= totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Next
+          </Button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function TopUpForm({ onCreated }: { onCreated: (request: TopUpRequestResponse) => void }) {
@@ -178,7 +402,45 @@ function CancelRequestAction({
   );
 }
 
+function useWalletBalance() {
+  const [result, setResult] = useState<
+    | { key: number; wallet: WalletResponse; error?: undefined }
+    | { key: number; wallet?: undefined; error: string }
+  >({ key: -1, wallet: { balance: 0, recentTransactions: [] } });
+  const [retryCount, setRetryCount] = useState(0);
+
+  const isLoading = result.key !== retryCount;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    walletApi.getWallet().then(
+      (wallet) => {
+        if (!cancelled) setResult({ key: retryCount, wallet });
+      },
+      (err) => {
+        if (cancelled) return;
+        const message = err instanceof ApiError ? err.message : 'Failed to load wallet balance.';
+        setResult({ key: retryCount, error: message });
+      },
+    );
+
+    return () => {
+      cancelled = true;
+    };
+  }, [retryCount]);
+
+  return {
+    wallet: result.wallet ?? null,
+    error: isLoading ? null : (result.error ?? null),
+    isLoading,
+    retry: () => setRetryCount((c) => c + 1),
+  };
+}
+
 export default function WalletPage() {
+  const balance = useWalletBalance();
+
   const [result, setResult] = useState<
     { key: number; requests: TopUpRequestResponse[]; error?: undefined } | { key: number; requests?: undefined; error: string }
   >({ key: -1, requests: [] });
@@ -228,6 +490,17 @@ export default function WalletPage() {
         <Coins className="size-6 text-cta" />
         <h1 className="font-heading text-2xl font-semibold text-foreground">Wallet</h1>
       </div>
+
+      <BalanceCard
+        wallet={balance.wallet}
+        isLoading={balance.isLoading}
+        error={balance.error}
+        onRetry={balance.retry}
+      />
+
+      <TransactionLedger />
+
+      <Separator />
 
       {atPendingCap ? (
         <Card>
