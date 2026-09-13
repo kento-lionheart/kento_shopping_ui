@@ -8,6 +8,7 @@ import AdminProductsPage from './pages/admin/AdminProductsPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import AddressPage from './pages/AddressPage';
+import CartPage from './pages/CartPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductListPage from './pages/ProductListPage';
 import WalletPage from './pages/WalletPage';
@@ -25,6 +26,7 @@ function AppRoutes() {
         <Route element={<ProtectedRoute />}>
           <Route path="/account/address" element={<AddressPage />} />
           <Route path="/wallet" element={<WalletPage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Route>
       </Route>
 
