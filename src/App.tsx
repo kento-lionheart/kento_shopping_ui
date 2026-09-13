@@ -8,6 +8,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductListPage from './pages/ProductListPage';
+import WalletPage from './pages/WalletPage';
 
 function AppRoutes() {
   return (
@@ -18,6 +19,10 @@ function AppRoutes() {
       <Route element={<StorefrontLayout />}>
         <Route path="/" element={<ProductListPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/wallet" element={<WalletPage />} />
+        </Route>
       </Route>
 
       <Route element={<ProtectedRoute />}>
