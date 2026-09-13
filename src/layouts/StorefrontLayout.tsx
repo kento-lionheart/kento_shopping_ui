@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LogOut, MapPin, ShoppingCart, User, Wallet } from 'lucide-react';
+import { LogOut, MapPin, Receipt, ShoppingCart, User, Wallet } from 'lucide-react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import * as cartApi from '@/api/cart';
 import { useAuth } from '@/auth/useAuth';
@@ -47,6 +47,12 @@ function AccountMenu() {
           <Link to="/wallet">
             <Wallet />
             Wallet
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/orders">
+            <Receipt />
+            My Orders
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogout}>
