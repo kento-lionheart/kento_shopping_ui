@@ -7,6 +7,7 @@ import AdminHomePage from './pages/admin/AdminHomePage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import AdminRolesPage from './pages/admin/AdminRolesPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminWalletPage from './pages/admin/AdminWalletPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import AddressPage from './pages/AddressPage';
@@ -38,6 +39,7 @@ function AppRoutes() {
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="users" element={<AdminUsersPage />} />
           <Route path="roles" element={<AdminRolesPage />} />
+          <Route path="wallet" element={<AdminWalletPage />} />
         </Route>
       </Route>
 
