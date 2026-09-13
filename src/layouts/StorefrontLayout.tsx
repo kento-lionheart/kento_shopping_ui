@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { LogOut, ShoppingCart, User } from 'lucide-react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import * as cartApi from '@/api/cart';
 import { useAuth } from '@/auth/useAuth';
 import { Button } from '@/components/ui/button';
 import {
@@ -44,6 +46,46 @@ function AccountMenu() {
   );
 }
 
+function CartLink() {
+  const { isAuthenticated, roles } = useAuth();
+  const [itemCount, setItemCount] = useState<number | null>(null);
+  const isCustomer = isAuthenticated && roles.includes('CUSTOMER');
+
+  useEffect(() => {
+    if (!isCustomer) return;
+
+    let cancelled = false;
+
+    cartApi.getCart().then(
+      (cart) => {
+        if (!cancelled) setItemCount(cart.itemCount ?? 0);
+      },
+      () => {
+        if (!cancelled) setItemCount(null);
+      },
+    );
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isCustomer]);
+
+  const displayedCount = isCustomer ? itemCount : null;
+
+  return (
+    <Button asChild variant="ghost" size="icon" aria-label="Cart" className="relative">
+      <Link to="/cart">
+        <ShoppingCart />
+        {displayedCount !== null && displayedCount > 0 && (
+          <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-cta px-1 text-[10px] font-medium text-cta-foreground">
+            {displayedCount}
+          </span>
+        )}
+      </Link>
+    </Button>
+  );
+}
+
 export function StorefrontLayout() {
   return (
     <div className="flex min-h-dvh flex-col">
@@ -62,11 +104,7 @@ export function StorefrontLayout() {
             </Link>
           </nav>
 
-          <Button asChild variant="ghost" size="icon" aria-label="Cart">
-            <Link to="/cart">
-              <ShoppingCart />
-            </Link>
-          </Button>
+          <CartLink />
 
           <AccountMenu />
         </div>

@@ -6,6 +6,7 @@ import { StorefrontLayout } from './layouts/StorefrontLayout';
 import AdminHomePage from './pages/admin/AdminHomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import CartPage from './pages/CartPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ProductListPage from './pages/ProductListPage';
 
@@ -18,6 +19,10 @@ function AppRoutes() {
       <Route element={<StorefrontLayout />}>
         <Route path="/" element={<ProductListPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/cart" element={<CartPage />} />
+        </Route>
       </Route>
 
       <Route element={<ProtectedRoute />}>
