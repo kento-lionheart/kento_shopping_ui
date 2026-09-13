@@ -41,14 +41,17 @@ function AccountMenu() {
 export function StorefrontLayout() {
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-40 border-b border-border bg-card">
-        <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4">
-          <Link to="/" className="font-heading text-xl font-semibold text-foreground">
-            Kento Shopping
+      <header className="glass sticky top-0 z-40 border-b">
+        <div className="mx-auto flex h-18 max-w-7xl items-center gap-6 px-4">
+          <Link
+            to="/"
+            className="font-heading text-2xl font-semibold tracking-wide text-foreground"
+          >
+            Kento
           </Link>
 
-          <nav className="flex flex-1 items-center gap-4 text-sm font-medium">
-            <Link to="/" className="text-foreground/80 hover:text-foreground">
+          <nav className="flex flex-1 items-center gap-4 text-sm font-medium uppercase tracking-wide">
+            <Link to="/" className="text-foreground/70 hover:text-foreground">
               Home
             </Link>
           </nav>

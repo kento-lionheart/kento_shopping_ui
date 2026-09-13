@@ -6,7 +6,8 @@ import { StorefrontLayout } from './layouts/StorefrontLayout';
 import AdminHomePage from './pages/admin/AdminHomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
-import HomePage from './pages/HomePage';
+import ProductDetailPage from './pages/ProductDetailPage';
+import ProductListPage from './pages/ProductListPage';
 
 function AppRoutes() {
   return (
@@ -14,11 +15,12 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      <Route element={<ProtectedRoute />}>
-        <Route element={<StorefrontLayout />}>
-          <Route path="/" element={<HomePage />} />
-        </Route>
+      <Route element={<StorefrontLayout />}>
+        <Route path="/" element={<ProductListPage />} />
+        <Route path="/products/:id" element={<ProductDetailPage />} />
+      </Route>
 
+      <Route element={<ProtectedRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminHomePage />} />
         </Route>

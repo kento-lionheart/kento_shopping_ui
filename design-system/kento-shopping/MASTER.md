@@ -7,9 +7,9 @@
 ---
 
 **Project:** Kento Shopping
-**Generated:** 2026-09-12 16:07:31
-**Category:** E-commerce
-**Design Dials:** Variance 3/10 (Centered / Minimal) | Density 6/10 (Standard)
+**Generated:** 2026-09-12 16:51:49
+**Category:** E-commerce Luxury
+**Design Dials:** Variance 7/10 (Balanced / Modern)
 
 ---
 
@@ -19,40 +19,38 @@
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
-| Primary | `#059669` | `--color-primary` |
-| On Primary | `#000000` | `--color-on-primary` |
-| Secondary | `#10B981` | `--color-secondary` |
-| On Secondary | `#0F172A` | `--color-on-secondary` |
-| Accent/CTA | `#EA580C` | `--color-accent` |
-| On Accent/CTA | `#000000` | `--color-on-accent` |
-| Background | `#ECFDF5` | `--color-background` |
-| Foreground | `#064E3B` | `--color-foreground` |
+| Primary | `#1C1917` | `--color-primary` |
+| On Primary | `#FFFFFF` | `--color-on-primary` |
+| Secondary | `#44403C` | `--color-secondary` |
+| On Secondary | `#FFFFFF` | `--color-on-secondary` |
+| Accent/CTA | `#A16207` | `--color-accent` |
+| On Accent/CTA | `#FFFFFF` | `--color-on-accent` |
+| Background | `#FAFAF9` | `--color-background` |
+| Foreground | `#0C0A09` | `--color-foreground` |
 | Card | `#FFFFFF` | `--color-card` |
-| Card Foreground | `#064E3B` | `--color-card-foreground` |
-| Muted | `#E8F1F3` | `--color-muted` |
+| Card Foreground | `#0C0A09` | `--color-card-foreground` |
+| Muted | `#E8ECF0` | `--color-muted` |
 | Muted Foreground | `#475569` | `--color-muted-foreground` |
-| Border | `#A7F3D0` | `--color-border` |
+| Border | `#D6D3D1` | `--color-border` |
 | Destructive | `#DC2626` | `--color-destructive` |
 | On Destructive | `#FFFFFF` | `--color-on-destructive` |
-| Ring | `#059669` | `--color-ring` |
+| Ring | `#1C1917` | `--color-ring` |
 
-**Color Notes:** Success green + urgency orange [Accent adjusted from #F97316]
+**Color Notes:** Premium dark + gold accent [Accent adjusted from #CA8A04]
 
 ### Typography
 
-- **Heading Font:** Rubik
-- **Body Font:** Nunito Sans
-- **Mood:** ecommerce, clean, shopping, product, retail, conversion
-- **Google Fonts:** [Rubik + Nunito Sans](https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap)
+- **Heading Font:** Cormorant
+- **Body Font:** Montserrat
+- **Mood:** luxury, high-end, fashion, elegant, refined, premium
+- **Google Fonts:** [Cormorant + Montserrat](https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap)
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
 ```
 
 ### Spacing Variables
-
-*Density: 6/10 — Standard*
 
 | Token | Value | Usage |
 |-------|-------|-------|
@@ -82,8 +80,8 @@
 ```css
 /* Primary Button */
 .btn-primary {
-  background: #EA580C;
-  color: #000000; /* on-accent token — white fails WCAG AA (3.6:1) on this orange */
+  background: #A16207;
+  color: white;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -99,8 +97,8 @@
 /* Secondary Button */
 .btn-secondary {
   background: transparent;
-  color: #059669;
-  border: 2px solid #059669;
+  color: #1C1917;
+  border: 2px solid #1C1917;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -113,7 +111,7 @@
 
 ```css
 .card {
-  background: #ECFDF5;
+  background: #FAFAF9;
   border-radius: 12px;
   padding: 24px;
   box-shadow: var(--shadow-md);
@@ -139,9 +137,9 @@
 }
 
 .input:focus {
-  border-color: #059669;
+  border-color: #1C1917;
   outline: none;
-  box-shadow: 0 0 0 3px #05966920;
+  box-shadow: 0 0 0 3px #1C191720;
 }
 ```
 
@@ -167,13 +165,13 @@
 
 ## Style Guidelines
 
-**Style:** Minimalism & Swiss Style
+**Style:** Liquid Glass
 
-**Keywords:** Clean, simple, spacious, functional, white space, high contrast, geometric, sans-serif, grid-based, essential
+**Keywords:** dynamic material, optical glass, translucency, lensing, refraction, fluid morphing, system navigation
 
-**Best For:** Enterprise apps, dashboards, documentation sites, SaaS platforms, professional tools
+**Best For:** Apple-platform navigation, controls, and system-aligned app chrome
 
-**Key Effects:** Subtle hover (200-250ms), smooth transitions, sharp shadows if any, clear type hierarchy, fast loading
+**Key Effects:** Lensing and refraction, adaptive translucency, and fluid morph transitions aligned to Apple platform behavior
 
 ### Page Pattern
 
@@ -187,8 +185,8 @@
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Flat design without depth
-- ❌ Text-heavy pages
+- ❌ Vibrant & Block-based
+- ❌ Playful colors
 
 ### Additional Forbidden Patterns
 
