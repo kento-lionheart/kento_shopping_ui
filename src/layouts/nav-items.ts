@@ -1,5 +1,13 @@
 import type { LucideIcon } from 'lucide-react';
-import { FolderTree, LayoutDashboard, Package, ShoppingCart, Users, Wallet } from 'lucide-react';
+import {
+  FolderTree,
+  LayoutDashboard,
+  Package,
+  ShieldCheck,
+  ShoppingCart,
+  Users,
+  Wallet,
+} from 'lucide-react';
 
 export interface AdminNavItem {
   label: string;
@@ -14,5 +22,6 @@ export const adminNavItems: AdminNavItem[] = [
   { label: 'Categories', href: '/admin/categories', icon: FolderTree, permission: 'CATEGORY_MANAGE' },
   { label: 'Orders', href: '/admin/orders', icon: ShoppingCart, permission: 'ORDER_READ_ALL' },
   { label: 'Users', href: '/admin/users', icon: Users, permission: 'USER_READ' },
+  { label: 'Roles', href: '/admin/roles', icon: ShieldCheck, permission: 'ROLE_MANAGE' },
   { label: 'Wallet & top-ups', href: '/admin/wallet', icon: Wallet, permission: 'TOPUP_READ_ALL' },
 ];

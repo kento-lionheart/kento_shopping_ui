@@ -5,6 +5,8 @@ import { AdminLayout } from './layouts/AdminLayout';
 import { StorefrontLayout } from './layouts/StorefrontLayout';
 import AdminHomePage from './pages/admin/AdminHomePage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
+import AdminRolesPage from './pages/admin/AdminRolesPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import AddressPage from './pages/AddressPage';
@@ -34,6 +36,8 @@ function AppRoutes() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminHomePage />} />
           <Route path="products" element={<AdminProductsPage />} />
+          <Route path="users" element={<AdminUsersPage />} />
+          <Route path="roles" element={<AdminRolesPage />} />
         </Route>
       </Route>
 
