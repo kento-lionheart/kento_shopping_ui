@@ -1,6 +1,12 @@
 import { getToken, clearToken } from '../auth/token';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const ORIGIN = new URL(BASE_URL).origin;
+
+/** Product images and other static assets are served from the API origin, outside /api/v1. */
+export function getAssetUrl(path: string): string {
+  return `${ORIGIN}${path}`;
+}
 
 export class ApiError extends Error {
   status: number;

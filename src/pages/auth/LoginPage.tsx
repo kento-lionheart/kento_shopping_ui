@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../auth/useAuth';
-import { ApiError } from '../../api/client';
+import { useAuth } from '@/auth/useAuth';
+import { ApiError } from '@/api/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -30,38 +34,68 @@ export default function LoginPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Log in</h1>
+    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-[#1C1917] to-[#3a2f1f] px-4">
+      <Card className="w-full max-w-sm border-white/10 bg-[rgba(28,25,23,0.6)] shadow-2xl backdrop-blur-2xl backdrop-saturate-150">
+        <CardHeader>
+          <p className="text-xs font-medium tracking-[0.3em] text-cta uppercase">Kento</p>
+          <CardTitle className="font-heading text-3xl font-medium text-white">Log in</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* red-400, not text-destructive: the token's #DC2626 fails contrast on this dark glass card */}
+            {error && (
+              <p role="alert" className="text-sm text-red-400">
+                {error}
+              </p>
+            )}
 
-      {error && <p role="alert">{error}</p>}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email" className="text-white/80">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="border-white/20 text-white placeholder:text-white/40 focus-visible:border-cta focus-visible:ring-cta/30"
+              />
+            </div>
 
-      <label htmlFor="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        autoComplete="email"
-      />
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="password" className="text-white/80">
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                className="border-white/20 text-white placeholder:text-white/40 focus-visible:border-cta focus-visible:ring-cta/30"
+              />
+            </div>
 
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        autoComplete="current-password"
-      />
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 bg-cta text-cta-foreground hover:bg-cta/90"
+            >
+              {isSubmitting ? 'Logging in…' : 'Log in'}
+            </Button>
 
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Logging in…' : 'Log in'}
-      </button>
-
-      <p>
-        Don't have an account? <Link to="/register">Register</Link>
-      </p>
-    </form>
+            <p className="text-center text-sm text-white/60">
+              Don't have an account?{' '}
+              <Link to="/register" className="font-medium text-cta hover:underline">
+                Register
+              </Link>
+            </p>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
