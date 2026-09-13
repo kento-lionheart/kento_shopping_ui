@@ -1,5 +1,5 @@
 import { LogOut } from 'lucide-react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/useAuth';
 import { RequirePermission } from '@/auth/RequirePermission';
 import {
@@ -50,6 +50,12 @@ function AdminNav() {
 
 export function AdminLayout() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <SidebarProvider>
@@ -69,7 +75,7 @@ export function AdminLayout() {
         <SidebarFooter>
           <div className="flex items-center justify-between gap-2 px-2 py-1">
             <span className="truncate text-sm text-sidebar-foreground/80">{user?.fullName}</span>
-            <Button variant="ghost" size="icon" aria-label="Log out" onClick={logout}>
+            <Button variant="ghost" size="icon" aria-label="Log out" onClick={handleLogout}>
               <LogOut />
             </Button>
           </div>
