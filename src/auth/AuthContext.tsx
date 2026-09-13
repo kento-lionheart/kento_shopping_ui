@@ -47,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(auth.token);
       }
       applyAuth(auth);
+      return auth;
     },
     [applyAuth],
   );
